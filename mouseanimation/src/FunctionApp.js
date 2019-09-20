@@ -22,7 +22,7 @@ const FunctionApp = () => {
 
   const _handleMouseMove = e => {
     setMoveX((width / 2 - e.nativeEvent.clientX) * 0.1 + "px")
-    setMoveY((height / 2 - e.nativeEvent.clientX) * 0.1 + "px")
+    setMoveY((height / 2 - e.nativeEvent.clientY) * 0.1 + "px")
   }
 
   return (
