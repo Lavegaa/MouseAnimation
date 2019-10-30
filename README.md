@@ -1,68 +1,126 @@
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+# MouseAnimation
+react hooks를 공부하며 기존 class component에서 functional component로 리팩토링 했다.
+# 빠른시작
 
-## Available Scripts
+## 클론
 
-In the project directory, you can run:
+```
+git clone https://github.com/Lavegaa/MouseAnimation.git
+```
 
-### `npm start`
+## dependencies 설치
 
-Runs the app in the development mode.<br>
-Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
+```
+npm install
+```
 
-The page will reload if you make edits.<br>
-You will also see any lint errors in the console.
+or
 
-### `npm test`
+```
+yarn
+```
 
-Launches the test runner in the interactive watch mode.<br>
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+## 시작
 
-### `npm run build`
+```
+npm start
+```
 
-Builds the app for production to the `build` folder.<br>
-It correctly bundles React in production mode and optimizes the build for the best performance.
+or
 
-The build is minified and the filenames include the hashes.<br>
-Your app is ready to be deployed!
+```
+yarn start
+```
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+# useState
+기존 class component에서 state 설정과 setState를 hooks에서는 useState를 통해 구현할 수 있다.
+## Class component
+```
+import React, { Component } from "react"
 
-### `npm run eject`
+class App extends Component {
+  state = { width: 0, height: 0, moveX: "", moveY: "" }
+  
+  ...
+   _handleMouseMove = e => {
+    const { width, height } = this.state
 
-**Note: this is a one-way operation. Once you `eject`, you can’t go back!**
+    this.setState({
+      moveX: (width / 2 - e.nativeEvent.clientX) * 0.1 + "px",
+      moveY: (height / 2 - e.nativeEvent.clientY) * 0.1 + "px"
+    })
+  }
+  ...
+  
+}
+```
+## funtional component
+```
+import React, { useState, useEffect } from "react";
 
-If you aren’t satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+const FunctionApp = () => {
+  const [width, setWidth] = useState(0);
+  const [height, setHeight] = useState(0);
+  const [moveX, setMoveX] = useState("");
+  const [moveY, setMoveY] = useState("");
+  
+  ...
+  const _handleMouseMove = e => {
+    setMoveX((width / 2 - e.nativeEvent.clientX) * 0.1 + "px");
+    setMoveY((height / 2 - e.nativeEvent.clientY) * 0.1 + "px");
+  };
+  ...
+  
+}
+```
+# useEffect
+functional component에서도 useEffect hook을 사용해 라이프 사이클을 관리 할 수 있다.
 
-Instead, it will copy all the configuration files and the transitive dependencies (Webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you’re on your own.
+## Class component
+```
+import React, { Component } from "react"
 
-You don’t have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn’t feel obligated to use this feature. However we understand that this tool wouldn’t be useful if you couldn’t customize it when you are ready for it.
+class App extends Component {
+  state = { width: 0, height: 0, moveX: "", moveY: "" }
 
-## Learn More
+  componentDidMount() {
+    this.updateWindowDimensions()
+    window.addEventListener("resize", this.updateWindowDimensions)
+  }
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
+  componentWillUnmount() {
+    window.removeEventListener("resize", this.updateWindowDimensions)
+  }
 
-To learn React, check out the [React documentation](https://reactjs.org/).
+  updateWindowDimensions = () => {
+    this.setState({
+      width: window.innerWidth,
+      height: window.innerHeight
+    })
+  }
+...  
 
-### Code Splitting
+}
+```
 
-This section has moved here: https://facebook.github.io/create-react-app/docs/code-splitting
+## funtional component
+```
+import React, { useState, useEffect } from "react";
 
-### Analyzing the Bundle Size
+const FunctionApp = () => {
+  useEffect(() => {
+    updateWindowDimensions();
+    window.addEventListener("resize", updateWindowDimensions);
+    return () => {
+      window.removeEventListener("resize", updateWindowDimensions);
+    };
+  });
 
-This section has moved here: https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size
+  const updateWindowDimensions = () => {
+    setWidth(window.innerWidth);
+    setHeight(window.innerHeight);
+  };
+ ...
 
-### Making a Progressive Web App
-
-This section has moved here: https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app
-
-### Advanced Configuration
-
-This section has moved here: https://facebook.github.io/create-react-app/docs/advanced-configuration
-
-### Deployment
-
-This section has moved here: https://facebook.github.io/create-react-app/docs/deployment
-
-### `npm run build` fails to minify
-
-This section has moved here: https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify
+}
+```
